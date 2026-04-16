@@ -1,5 +1,5 @@
 import discord 
-from discord.ext ipmort commands 
+from discord.ext import commands 
 import os 
 from dotenv import load_dotenv 
 from openai import OpenAI
@@ -25,6 +25,7 @@ try:
   return response.choices[0].message.content
 except Exception as e:
   return f"Error:{e}"
+ 
   @bot.command()
   async def explain(ctx,*,topic):
     prompt = f"Explain this topic in simple terms for studying:{topic}"
@@ -40,6 +41,18 @@ async def question(ctx,*, topic):
 @bot.command()
 async def answers(ctx,*,topic):
   prompt = f"provide answers to common questions about:{topic}"
-  await ctx.send(ask_ai(prompt))
+  await ctx.send(ask_ai(prompt)) 
 
 
+@bot.command()
+async def studymode(ctx. *, topic):
+  await ctx.send(f"study mode started for: **{topic}**")
+
+  questions = ask_ai(f"Create 3 quiz questions about {topic}")
+  await ctx.send("Questions:\n" + questions)
+
+  answers = ask_ai(f"provide answers for these questions :\n{questions}")
+  await ctx.send("Answers:\n" + answers)
+
+
+@bot.run(DISCORD_TOKEN)
