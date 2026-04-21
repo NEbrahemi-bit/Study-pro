@@ -1,10 +1,7 @@
 import discord 
 from discord.ext import commands 
 import os 
-from dotenv import load_dotenv 
 from openai import OpenAI
-
-load_dotenv()
 
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
@@ -16,16 +13,28 @@ intents.message_content = True
 
 bot = commands.Bot(command_prefix="!",intents=intents)
 
+@bot.even
+async def ON_ready():
+  print(f"Logged in as {bot.user}")
+  
 def ask_ai(prompt):
 try:
+  # Fixed: Change method, model name, and parameters
+  response = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[{role": "user", "content":prompt}]
   response = client.chat.completions.create(
     model="gpt-4.1-mini",
     messages=[{"role":"user","content": prompt}]
   )
-  return response.choices[0].message.content
-except Exception as e:
-  return f"Error:{e}"
  
+  # fixed: Correct way to access the text response 
+  return response.choices[0].message.content
+  except Exception as e:
+  return f"Error:{e}"
+return response.choices[0].message.content
+except Exception as e:
+
   @bot.command()
   async def explain(ctx,*,topic):
     prompt = f"Explain this topic in simple terms for studying:{topic}"
